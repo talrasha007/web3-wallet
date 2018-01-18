@@ -16,6 +16,10 @@ function fromPrivateKey(privateKey) {
     return walletFactory.fromPrivateKey(privateKeyBuffer);
 }
 
+function fromV3(v3, password) {
+    return walletFactory.fromV3(v3, password);
+}
+
 function generate() {
     return walletFactory.generate();
 }
@@ -71,6 +75,7 @@ module.exports = {
     create,
     wallet: {
         fromPrivateKey,
+        fromV3,
         generate
     }
 };
