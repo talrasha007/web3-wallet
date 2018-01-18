@@ -1,27 +1,30 @@
-//Provider Engine sub-modules
 const ProviderEngine = require('web3-provider-engine');
 const CacheSubprovider = require('web3-provider-engine/subproviders/cache.js');
 const FixtureSubprovider = require('web3-provider-engine/subproviders/fixture.js');
 const FilterSubprovider = require('web3-provider-engine/subproviders/filters.js');
-const VmSubprovider = require('web3-provider-engine/subproviders/vm.js');
+const walletFactory = require('ethereumjs-wallet');
+const HookedWalletEthTxSubprovider = require('web3-provider-engine/subproviders/hooked-wallet-ethtx.js');
 const NonceSubprovider = require('web3-provider-engine/subproviders/nonce-tracker.js');
 const RpcSubprovider = require('web3-provider-engine/subproviders/rpc.js');
-
-//EthereumJS Wallet Sub-Provider
-const WalletSubprovider = require('ethereumjs-wallet/provider-engine');
-const walletFactory = require('ethereumjs-wallet');
 
 //Web3 Module
 const Web3 = require('web3');
 
-function Web3Wallet(privateKey, rpcUrl) {
+function fromPrivateKey(privateKey) {
     //Wallet Initialization
-    const privateKeyBuffer = new Buffer(privateKey, "hex");
-    const myWallet = walletFactory.fromPrivateKey(privateKeyBuffer);
+    const privateKeyBuffer = new Buffer(privateKey, 'hex');
+    return walletFactory.fromPrivateKey(privateKeyBuffer);
+}
 
+function generate() {
+    return walletFactory.generate();
+}
+
+function create(myWallet, rpcUrl) {
     //Engine initialization & sub-provider attachment
     const engine = new ProviderEngine();
 
+    // static results
     engine.addProvider(new FixtureSubprovider({
         web3_clientVersion: 'ProviderEngine/v0.0.0/javascript',
         net_listening: true,
@@ -40,13 +43,16 @@ function Web3Wallet(privateKey, rpcUrl) {
     engine.addProvider(new NonceSubprovider());
 
     // vm
-    engine.addProvider(new VmSubprovider());
+    // engine.addProvider(new VmSubprovider());
+
+    // id mgmt
+    engine.addProvider(new HookedWalletEthTxSubprovider({
+        getAccounts: function(cb){ cb(null, [ myWallet.getAddressString() ]) },
+        getPrivateKey: function(address, cb){ cb(null, myWallet.getPrivateKey()) }
+    }));
 
     // Here the URL can be your localhost for TestRPC or the Infura URL
     engine.addProvider(new RpcSubprovider({ rpcUrl }));
-
-    // Wallet Attachment
-    engine.addProvider(new WalletSubprovider(myWallet, {}));
 
     // network connectivity error
     engine.on('error', function(err){
@@ -61,4 +67,10 @@ function Web3Wallet(privateKey, rpcUrl) {
     return new Web3(engine);
 }
 
-module.exports = Web3Wallet;
+module.exports = {
+    create,
+    wallet: {
+        fromPrivateKey,
+        generate
+    }
+};

@@ -4,7 +4,8 @@
   "description": "web3-wallet",
   "main": "index.js",
   "scripts": {
-    "build": "mkdir -p ./dist && browserify -s Web3Wallet -e index.js > dist/Web3Wallet.js"
+    "build": "mkdir -p ./dist && browserify -s Web3Wallet -e index.js > dist/Web3Wallet.js",
+    "build:min": "mkdir -p ./dist && browserify -s Web3Wallet -e index.js | uglifyjs > dist/Web3Wallet.min.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +24,6 @@
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "browserify": "^14.0.0"
+    "babel-preset-stage-0": "^6.24.1"
   }
 }
