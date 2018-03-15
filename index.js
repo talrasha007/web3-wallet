@@ -64,7 +64,7 @@ function create(myWallet, rpcUrl) {
     // engine.addProvider(new VmSubprovider());
 
     // id mgmt
-    engine.addProvider(new HookedWalletEthTxSubprovider({
+    myWallet && engine.addProvider(new HookedWalletEthTxSubprovider({
         getAccounts: function(cb){ cb(null, [ myWallet.getAddressString() ]) },
         getPrivateKey: function(address, cb){ cb(null, myWallet.getPrivateKey()) }
     }));
@@ -84,7 +84,8 @@ function create(myWallet, rpcUrl) {
     //Actual Initialization of the web3 module
     const web3 = new Web3(engine);
 
-    web3.eth.defaultAccount = myWallet.getAddressString();
+    if (myWallet) web3.eth.defaultAccount = myWallet.getAddressString();
+
     web3.eth.getBalance = promisify(web3.eth.getBalance);
     web3.eth.getBlockNumber = promisify(web3.eth.getBlockNumber);
     web3.eth.getBlock = promisify(web3.eth.getBlock);
