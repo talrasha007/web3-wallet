@@ -91,7 +91,7 @@ function create(myWallet, rpcUrl) {
     web3.eth.getBlock = promisify(web3.eth.getBlock);
     web3.eth.getTransactionReceipt = promisify(web3.eth.getTransactionReceipt);
 
-    web3.eth.loadContract = function (abi, address) {
+    web3.loadContract = web3.eth.loadContract = function (abi, address) {
       const instance = web3.eth.contract(abi).at(address);
 
       abi.forEach(api => {
