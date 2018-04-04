@@ -1,6 +1,6 @@
 {
   "name": "web3-wallet",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web3-wallet",
   "main": "index.js",
   "scripts": {
