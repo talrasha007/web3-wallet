@@ -12,15 +12,21 @@ const Web3 = require('web3');
 
 function promisify(fn) {
     return function () {
+        const me = this;
         const args = Array.prototype.slice.call(arguments, 0);
-        return new Promise(function (resolve, reject) {
+
+        if (typeof args[args.length - 1] === 'function') {
+            return fn.apply(me, args);
+        } else {
+          return new Promise(function (resolve, reject) {
             args.push(function (err, res) {
-                if (err) reject(err);
-                else resolve(res);
+              if (err) reject(err);
+              else resolve(res);
             });
 
-            fn.apply(null, args);
-        });
+            fn.apply(me, args);
+          });
+        }
     }
 }
 
