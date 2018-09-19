@@ -11,20 +11,17 @@ const RpcSubprovider = require('web3-provider-engine/subproviders/rpc.js');
 const Web3 = require('web3');
 
 function promisify(fn) {
-    return function () {
+    return function (...args) {
         const me = this;
-        const args = Array.prototype.slice.call(arguments, 0);
 
         if (typeof args[args.length - 1] === 'function') {
             return fn.apply(me, args);
         } else {
           return new Promise(function (resolve, reject) {
-            args.push(function (err, res) {
+            fn.apply(me, [...args, function (err, res) {
               if (err) reject(err);
               else resolve(res);
-            });
-
-            fn.apply(me, args);
+            }]);
           });
         }
     }
@@ -44,7 +41,7 @@ function generate() {
     return walletFactory.generate();
 }
 
-function create(myWallet, rpcUrl) {
+function create(myWallet, rpcUrl, opts = { cache: true }) {
     //Engine initialization & sub-provider attachment
     const engine = new ProviderEngine();
 
@@ -58,7 +55,7 @@ function create(myWallet, rpcUrl) {
     }));
 
     // cache layer
-    engine.addProvider(new CacheSubprovider());
+    opts.cache && engine.addProvider(new CacheSubprovider());
 
     // filters
     engine.addProvider(new FilterSubprovider());
