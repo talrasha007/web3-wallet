@@ -1,6 +1,6 @@
 {
   "name": "web3-wallet",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "web3-wallet",
   "main": "index.js",
   "scripts": {
@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/talrasha007/web3-wallet#readme",
   "dependencies": {
-    "ethereumjs-wallet": "~0.6.0",
-    "web3": "~0.20.6",
-    "web3-provider-engine": "~13.8.0"
+    "ethereumjs-wallet": "~0.6.2",
+    "web3": "~0.20.7",
+    "web3-provider-engine": "~14.0.6"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",

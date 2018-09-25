@@ -11,7 +11,7 @@ const RpcSubprovider = require('web3-provider-engine/subproviders/rpc.js');
 const Web3 = require('web3');
 
 function promisify(fn) {
-    return function (...args) {
+    const ret = function (...args) {
         const me = this;
 
         if (typeof args[args.length - 1] === 'function') {
@@ -24,7 +24,13 @@ function promisify(fn) {
             }]);
           });
         }
+    };
+
+    if (fn.estimateGas) {
+        ret.estimateGas = promisify(fn.estimateGas);
     }
+
+    return ret;
 }
 
 function fromPrivateKey(privateKey) {
