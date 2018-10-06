@@ -100,6 +100,10 @@ function create(myWallet, rpcUrl, opts = { cache: true }) {
     web3.eth.getBlockNumber = promisify(web3.eth.getBlockNumber);
     web3.eth.getBlock = promisify(web3.eth.getBlock);
     web3.eth.sendTransaction = promisify(web3.eth.sendTransaction);
+    web3.eth.sendRawTransaction = promisify(web3.eth.sendRawTransaction);
+    web3.eth.signTransaction = promisify(web3.eth.signTransaction);
+    web3.eth.getTransactionCount = promisify(web3.eth.getTransactionCount);
+    web3.eth.getGasPrice = promisify(web3.eth.getGasPrice);
     web3.eth.getTransactionReceipt = promisify(web3.eth.getTransactionReceipt);
 
     web3.loadContract = web3.eth.loadContract = function (abi, address) {
